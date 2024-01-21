@@ -1,32 +1,38 @@
 package com.darkmist.base;
 
 import com.darkmist.helper.ConfigReader;
+import com.darkmist.report.ExtentReportConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 
 public class Base {
     private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
-    @BeforeTest
+    @BeforeMethod
     public void initBrowser() {
         setDriver();
     }
-    @AfterTest
+    @AfterMethod
     public void closeBrowser() {
-        getDriver().close();
-        getDriver().quit();
+        WebDriver driver = getDriver();
+        if (driver != null) {
+            driver.quit();
+            driverThreadLocal.set(null);
+        }
     }
 
     public static void setDriver() {
         String browser = ConfigReader.getPropertyValue("browser");
-        if (browser.toLowerCase().equals("chrome")) {
+        if (browser.equalsIgnoreCase("chrome")) {
             WebDriverManager.chromedriver().setup();
             driverThreadLocal.set(new ChromeDriver());
-        } else if (browser.toLowerCase().equals("firefox")) {
+        } else if (browser.equalsIgnoreCase("firefox")) {
             WebDriverManager.firefoxdriver().setup();
             driverThreadLocal.set(new FirefoxDriver());
         } else {

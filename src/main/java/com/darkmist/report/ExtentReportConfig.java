@@ -11,8 +11,8 @@ import java.util.Objects;
 
 public final class ExtentReportConfig {
 
-    private static final ExtentSparkReporter sparkReporter = new ExtentSparkReporter(
-            FrameworkConstant.EXTENT_REPORT_FILE_PATH).viewConfigurer().viewOrder()
+    private static final ExtentSparkReporter sparkReporter = new ExtentSparkReporter
+            (FrameworkConstant.EXTENT_REPORT_FILE_PATH).viewConfigurer().viewOrder()
             .as(new ViewName[]{ViewName.DASHBOARD,ViewName.TEST,ViewName.EXCEPTION}).apply();
 
     private static ExtentReports extentReports;
@@ -39,7 +39,7 @@ public final class ExtentReportConfig {
      * This method to close report with all required data
      */
     public static void flushExtentReport() {
-        if (Objects.isNull(extentReports)) {
+        if (Objects.nonNull(extentReports)) {
             extentReports.flush();
         }
         ExtentManager.unload();

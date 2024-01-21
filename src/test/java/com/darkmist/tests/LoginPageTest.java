@@ -25,7 +25,7 @@ public class LoginPageTest extends Base {
         getDriver().get(getBaseUrl());
         loginPage = new LoginPage(getDriver());
         loginPage.doUserLogin(ConfigReader.getPropertyValue("username"),
-                ConfigReader.getPropertyValue("password"));
+                ConfigReader.getPropertyValue("invalid_password"));
         dashboardPage = new DashboardPage(getDriver());
         dashboardPage.getPageTag();
     }
