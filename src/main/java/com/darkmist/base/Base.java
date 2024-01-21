@@ -1,26 +1,41 @@
 package com.darkmist.base;
 
 import com.darkmist.helper.ConfigReader;
-import com.darkmist.helper.WebDriverFactory;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterMethod;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 
 public class Base {
+    private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
 
-    public static WebDriver driver;
-
-    @BeforeMethod
-    public void setUp() {
-        //Initialize the WebDriver
-        driver = WebDriverFactory.getDriver();
+    @BeforeTest
+    public void initBrowser() {
+        setDriver();
     }
-    @AfterMethod
-    public void tearDown() {
-        //Close the browser window and remove the instance
-        WebDriverFactory.quitDriver();
+    @AfterTest
+    public void closeBrowser() {
+        getDriver().close();
+        getDriver().quit();
+    }
+
+    public static void setDriver() {
+        String browser = ConfigReader.getPropertyValue("browser");
+        if (browser.toLowerCase().equals("chrome")) {
+            WebDriverManager.chromedriver().setup();
+            driverThreadLocal.set(new ChromeDriver());
+        } else if (browser.toLowerCase().equals("firefox")) {
+            WebDriverManager.firefoxdriver().setup();
+            driverThreadLocal.set(new FirefoxDriver());
+        } else {
+            throw new IllegalArgumentException("Invalid browser specified in Config file");
+        }
+    }
+
+    public static WebDriver getDriver() {
+        return driverThreadLocal.get();
     }
 
     public static String getBaseUrl() {

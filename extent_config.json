@@ -1,0 +1,12 @@
+{
+  "theme": "DARK",
+  "encoding": "UTF-8",
+  "protocol": "HTTP",
+  "timelineEnabled": true,
+  "offlineMode": true,
+  "thumbnailForBase64": false,
+  "documentTitle": "HTML Report",
+  "reportName": "OrangeHRM",
+  "timeStampFormat": "MMM dd, yyyy HH:mm:ss a",
+  "css": ".badge-primary{background-color:#8f2755}"
+}
